@@ -305,17 +305,14 @@ def output(event):
 	# Инициализируем драйвер хром
 	driver = webdriver.Chrome(chrome_options=options, executable_path='drivers/chromedriver.exe')
 
-	title_list = []
-	description_list = []
-	keywords_list = []
-	h1_list = []
-	h2_list = []
-	h3_list = []
-
-	none_type = []
 
 	for inquirie in inquiries:
-
+		title_list = []
+		description_list = []
+		keywords_list = []
+		h1_list = []
+		h2_list = []
+		h3_list = []
 		for i in range(1, deep_pars + 1):
 
 			# получаю страницу яндекс поиска
@@ -372,75 +369,77 @@ def output(event):
 				if keywords != None:
 					keywords_list.append(keywords.get('content'))
 
+
+
+
+				# создаю новую книгу
+				workbook = openpyxl.Workbook()
+				title_sheet = workbook.active
+
+				# filename = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M-%S")
+				# выбираем активный лист и меняем ему название
+				title_sheet.title = "title"
+
+				if title_check.get() == True:
+					i = 1
+					for word in title_list:
+						cellref = title_sheet.cell(row=i, column=1)
+						cellref.value = word
+						i = i + 1
+
+				if h3_check.get() == True:
+					# добавляю новую страницу
+					h3_sheet = workbook.create_sheet('H3', 1)
+					i = 1
+					for word in h3_list: 
+						cellref = h3_sheet.cell(row=i, column=1)
+						cellref.value = word
+						i = i + 1
+
+				if h2_check.get() == True:
+					# добавляю новую страницу
+					h2_sheet = workbook.create_sheet('H2', 1)
+					i = 1
+					for word in h2_list:
+						cellref = h2_sheet.cell(row=i, column=1)
+						cellref.value = word
+						i = i + 1
+
+				# добавляю новую страницу
+				if h1_check.get() == True:
+					h1_sheet = workbook.create_sheet('H1', 1)
+					i = 1
+					for word in h1_list:
+						cellref = h1_sheet.cell(row=i, column=1)
+						cellref.value = word
+						i = i + 1
+
+				if keywords_check.get() == True:
+					# добавляю новую страницу
+					keywords_sheet = workbook.create_sheet('Keywords', 1)
+					i = 1
+					for word in keywords_list:
+						cellref = keywords_sheet.cell(row=i, column=1)
+						cellref.value = word
+						i = i + 1
+
+				if desc_check.get() == True:
+					# добавляю новую страницу
+					description_sheet = workbook.create_sheet('Description', 1)
+					i = 1
+					for word in description_list:
+						cellref = description_sheet.cell(row=i, column=1)
+						cellref.value = word
+						i = i + 1
+
+				# сохраняю данные в exel
+				workbook.save(filename = inquirie+'.xlsx')
+
 				progress = progress + one_part_progress
 				print('Прогресс '+ str(progress))
 				barVar.set(round(progress))
 				root.update()
-
-
-	# создаю новую книгу
-	workbook = openpyxl.Workbook()
-	filename = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M-%S")
 	
-	# выбираем активный лист и меняем ему название
-
-	if title_check.get() == True:
-		title_sheet = workbook.active
-		title_sheet.title = "title"
-
-		i = 1
-		for word in title_list:
-			cellref = title_sheet.cell(row=i, column=1)
-			cellref.value = word
-			i = i + 1
-
-	if h3_check.get() == True:
-		# добавляю новую страницу
-		h3_sheet = workbook.create_sheet('H3', 1)
-		i = 1
-		for word in h3_list: 
-			cellref = h3_sheet.cell(row=i, column=1)
-			cellref.value = word
-			i = i + 1
-
-	if h2_check.get() == True:
-		# добавляю новую страницу
-		h2_sheet = workbook.create_sheet('H2', 1)
-		i = 1
-		for word in h2_list:
-			cellref = h2_sheet.cell(row=i, column=1)
-			cellref.value = word
-			i = i + 1
-
-	# добавляю новую страницу
-	if h1_check.get() == True:
-		h1_sheet = workbook.create_sheet('H1', 1)
-		i = 1
-		for word in h1_list:
-			cellref = h1_sheet.cell(row=i, column=1)
-			cellref.value = word
-			i = i + 1
-
-	if keywords_check.get() == True:
-		# добавляю новую страницу
-		keywords_sheet = workbook.create_sheet('Keywords', 1)
-		i = 1
-		for word in keywords_list:
-			cellref = keywords_sheet.cell(row=i, column=1)
-			cellref.value = word
-			i = i + 1
-
-	if desc_check.get() == True:
-		# добавляю новую страницу
-		description_sheet = workbook.create_sheet('Description', 1)
-		i = 1
-		for word in description_list:
-			cellref = description_sheet.cell(row=i, column=1)
-			cellref.value = word
-			i = i + 1
-
-	# сохраняю данные в exel
-	workbook.save(filename = filename+'.xlsx')
 
 	button_1.config(state="normal")
 	# button_2.config(state="disabled")
@@ -448,8 +447,6 @@ def output(event):
 	root.update()
 
 	print('Done')
-
-
 
 # ---------------------------------------------------------------------------------
 # рисую интерфейс
